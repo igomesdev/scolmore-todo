@@ -21,8 +21,12 @@ class TasksController extends Controller
 
     public function create(Request $request)
     {
+        $data = request()->validate([
+            'description' => ['required', 'min:5'],
+        ]);
+
     	$task = new Task();
-    	$task->description = $request->description;
+    	$task->description = $data['description'];
     	$task->user_id = Auth::id();
     	$task->save();
     	return redirect('/'); 
@@ -30,7 +34,6 @@ class TasksController extends Controller
 
     public function edit(Task $task)
     {
-
     	if (Auth::check() && Auth::user()->id == $task->user_id)
         {            
                 return view('edit', compact('task'));
